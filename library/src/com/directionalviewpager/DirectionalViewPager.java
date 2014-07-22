@@ -51,9 +51,9 @@ import android.widget.Scroller;
  * of apps when they are compiled against the newer version.</p>
  */
 public class DirectionalViewPager extends ViewPager {
-  private static final String TAG = "DirectionalViewPager";
+  private static final String TAG = "DirectionalViewPager:-";
   private static final String XML_NS = "http://schemas.android.com/apk/res/android";
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   private static final boolean USE_CACHE = false;
 
@@ -336,7 +336,7 @@ public class DirectionalViewPager extends ViewPager {
     // fling to a new position until we have finished the scroll to
     // that position, avoiding glitches from happening at that point.
     if (mPopulatePending) {
-      if (DEBUG) Log.i(TAG, "populate is pending, skipping for now...");
+      if (DEBUG) Log.d(TAG, "populate is pending, skipping for now...");
       return;
     }
 
@@ -353,14 +353,14 @@ public class DirectionalViewPager extends ViewPager {
     final int count = mAdapter.getCount();
     final int endPos = mCurItem < (count - 1) ? mCurItem + 1 : count - 1;
 
-    if (DEBUG) Log.v(TAG, "populating: startPos=" + startPos + " endPos=" + endPos);
+    if (DEBUG) Log.d(TAG, "populating: startPos=" + startPos + " endPos=" + endPos);
 
     // Add and remove pages in the existing list.
     int lastPos = -1;
     for (int i = 0; i < mItems.size(); i++) {
       ItemInfo ii = mItems.get(i);
       if ((ii.position < startPos || ii.position > endPos) && !ii.scrolling) {
-        if (DEBUG) Log.i(TAG, "removing: " + ii.position + " @ " + i);
+        if (DEBUG) Log.d(TAG, "removing: " + ii.position + " @ " + i);
         mItems.remove(i);
         i--;
         mAdapter.destroyItem(this, ii.position, ii.object);
@@ -373,7 +373,7 @@ public class DirectionalViewPager extends ViewPager {
           lastPos = startPos;
         }
         while (lastPos <= endPos && lastPos < ii.position) {
-          if (DEBUG) Log.i(TAG, "inserting: " + lastPos + " @ " + i);
+          if (DEBUG) Log.d(TAG, "inserting: " + lastPos + " @ " + i);
           addNewItem(lastPos, i);
           lastPos++;
           i++;
@@ -388,16 +388,16 @@ public class DirectionalViewPager extends ViewPager {
       lastPos++;
       lastPos = lastPos > startPos ? lastPos : startPos;
       while (lastPos <= endPos) {
-        if (DEBUG) Log.i(TAG, "appending: " + lastPos);
+        if (DEBUG) Log.d(TAG, "appending: " + lastPos);
         addNewItem(lastPos, -1);
         lastPos++;
       }
     }
 
     if (DEBUG) {
-      Log.i(TAG, "Current page list:");
+      Log.d(TAG, "Current page list:");
       for (int i = 0; i < mItems.size(); i++) {
-        Log.i(TAG, "#" + i + ": page " + mItems.get(i).position);
+        Log.d(TAG, "#" + i + ": page " + mItems.get(i).position);
       }
     }
 
@@ -581,7 +581,7 @@ public class DirectionalViewPager extends ViewPager {
     for (int i = 0; i < size; ++i) {
       final View child = getChildAt(i);
       if (child.getVisibility() != GONE) {
-        if (DEBUG) Log.v(TAG, "Measuring #" + i + " " + child
+        if (DEBUG) Log.d(TAG, "Measuring #" + i + " " + child
             + ": " + mChildWidthMeasureSpec + " x " + mChildHeightMeasureSpec);
         child.measure(mChildWidthMeasureSpec, mChildHeightMeasureSpec);
       }
@@ -629,7 +629,7 @@ public class DirectionalViewPager extends ViewPager {
         } else {
           childTop += off;
         }
-        if (DEBUG) Log.v(TAG, "Positioning #" + i + " " + child + " f=" + ii.object
+        if (DEBUG) Log.d(TAG, "Positioning #" + i + " " + child + " f=" + ii.object
             + ":" + childLeft + "," + childTop + " " + child.getMeasuredWidth()
             + "x" + child.getMeasuredHeight());
         child.layout(childLeft, childTop,
@@ -641,10 +641,10 @@ public class DirectionalViewPager extends ViewPager {
 
   @Override
   public void computeScroll() {
-    if (DEBUG) Log.i(TAG, "computeScroll: finished=" + mScroller.isFinished());
+    if (DEBUG) Log.d(TAG, "computeScroll: finished=" + mScroller.isFinished());
     if (!mScroller.isFinished()) {
       if (mScroller.computeScrollOffset()) {
-        if (DEBUG) Log.i(TAG, "computeScroll: still scrolling");
+        if (DEBUG) Log.d(TAG, "computeScroll: still scrolling");
         int oldX = getScrollX();
         int oldY = getScrollY();
         int x = mScroller.getCurrX();
@@ -723,7 +723,7 @@ public class DirectionalViewPager extends ViewPager {
     // Always take care of the touch gesture being complete.
     if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
       // Release the drag.
-      if (DEBUG) Log.v(TAG, "Intercept done!");
+      if (DEBUG) Log.d(TAG, "Intercept done!");
       mIsBeingDragged = false;
       mIsUnableToDrag = false;
       mActivePointerId = INVALID_POINTER;
@@ -734,11 +734,11 @@ public class DirectionalViewPager extends ViewPager {
     // are dragging.
     if (action != MotionEvent.ACTION_DOWN) {
       if (mIsBeingDragged) {
-        if (DEBUG) Log.v(TAG, "Intercept returning true!");
+        if (DEBUG) Log.d(TAG, "Intercept returning true!");
         return true;
       }
       if (mIsUnableToDrag) {
-        if (DEBUG) Log.v(TAG, "Intercept returning false!");
+        if (DEBUG) Log.d(TAG, "Intercept returning false!");
         return false;
       }
     }
@@ -777,10 +777,10 @@ public class DirectionalViewPager extends ViewPager {
         }
 
 
-        if (DEBUG) Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
+        if (DEBUG) Log.d(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
 
         if (primaryDiff > mTouchSlop && primaryDiff > secondaryDiff) {
-          if (DEBUG) Log.v(TAG, "Starting drag!");
+          if (DEBUG) Log.d(TAG, "Starting drag!");
           mIsBeingDragged = true;
           setScrollState(SCROLL_STATE_DRAGGING);
           if (mOrientation == HORIZONTAL) {
@@ -795,7 +795,7 @@ public class DirectionalViewPager extends ViewPager {
             // direction to be counted as a drag...  abort
             // any attempt to drag horizontally, to work correctly
             // with children that have scrolling containers.
-            if (DEBUG) Log.v(TAG, "Starting unable to drag!");
+            if (DEBUG) Log.d(TAG, "Starting unable to drag!");
             mIsUnableToDrag = true;
           }
         }
@@ -827,7 +827,7 @@ public class DirectionalViewPager extends ViewPager {
           mIsUnableToDrag = false;
         }
 
-        if (DEBUG) Log.v(TAG, "Down at " + mLastMotionX + "," + mLastMotionY
+        if (DEBUG) Log.d(TAG, "Down at " + mLastMotionX + "," + mLastMotionY
             + " mIsBeingDragged=" + mIsBeingDragged
             + "mIsUnableToDrag=" + mIsUnableToDrag);
         break;
@@ -902,9 +902,9 @@ public class DirectionalViewPager extends ViewPager {
           }
 
 
-          if (DEBUG) Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
+          if (DEBUG) Log.d(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
           if (primaryDiff > mTouchSlop && primaryDiff > secondaryDiff) {
-            if (DEBUG) Log.v(TAG, "Starting drag!");
+            if (DEBUG) Log.d(TAG, "Starting drag!");
             mIsBeingDragged = true;
             if (mOrientation == HORIZONTAL) {
               mLastMotionX = x;
