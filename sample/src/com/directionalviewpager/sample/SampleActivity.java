@@ -17,6 +17,7 @@ public class SampleActivity extends FragmentActivity {
 
     //Set up the pager
     pager = (DirectionalViewPager) findViewById(R.id.pager);
+    //pager.setOrientation(DirectionalViewPager.VERTICAL);
     pager.setOnTouchListener(new MyOnSwipeTouchListener(this));
     pager.setAdapter(new TestFragmentAdapter(getSupportFragmentManager()));
 
